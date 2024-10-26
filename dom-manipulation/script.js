@@ -109,11 +109,8 @@ function notifyUser(message) {
     }, 5000);
 }
 
-// Function to synchronize local quotes with the server every 10 seconds
-setInterval(syncQuotes, 10000); // Adjust interval as needed (10 seconds)
-
 // Function to add a new quote
-function addQuote() {
+function createAddQuoteForm() {
     const newQuoteText = document.getElementById('newQuoteText').value;
     const newQuoteCategory = document.getElementById('newQuoteCategory').value;
 
@@ -177,4 +174,7 @@ window.onload = function() {
     filterQuotes(); // Filter quotes to display based on the last selected category
     syncQuotes(); // Initial sync with server
 };
+
+// Synchronize local quotes with the server every 10 seconds
+setInterval(syncQuotes, 10000); // Adjust interval as needed (10 seconds)
 
