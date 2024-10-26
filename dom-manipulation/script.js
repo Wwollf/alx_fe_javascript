@@ -1,4 +1,4 @@
-// Array of quote objects, each with a 'text' and 'category' property
+// Array of quote objects, each with 'text' and 'category' properties
 const quotes = [
     { text: "The only limit to our realization of tomorrow is our doubts of today.", category: "Motivation" },
     { text: "Life is what happens when you're busy making other plans.", category: "Life" },
@@ -15,17 +15,21 @@ function showRandomQuote() {
         <p><em>Category: ${randomQuote.category}</em></p>
     `;
 }
+console.log(quotes);
 
-// Attach event listener to 'Show New Quote' button
+
+// Ensure 'Show New Quote' button triggers the showRandomQuote function
 document.getElementById('newQuote').addEventListener('click', showRandomQuote);
 
 // Function to add a new quote based on user input
 function addQuote() {
+    // Get user input values
     const newText = document.getElementById('newQuoteText').value.trim();
     const newCategory = document.getElementById('newQuoteCategory').value.trim();
 
+    // Check if both input fields are filled
     if (newText && newCategory) {
-        // Add new quote to the array
+        // Add new quote object to the quotes array
         quotes.push({ text: newText, category: newCategory });
         
         // Provide feedback to the user
@@ -37,4 +41,6 @@ function addQuote() {
     } else {
         alert("Please enter both a quote and a category.");
     }
+    console.log(quotes);
+
 }
