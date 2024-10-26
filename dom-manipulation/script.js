@@ -168,13 +168,27 @@ function filterQuotes() {
     localStorage.setItem('lastSelectedCategory', selectedCategory);
 }
 
+// Function to show a random quote
+function showRandomQuote() {
+    if (quotes.length === 0) {
+        document.getElementById('quoteDisplay').innerText = "No quotes available.";
+        return;
+    }
+    const randomIndex = Math.floor(Math.random() * quotes.length);
+    const randomQuote = quotes[randomIndex];
+    document.getElementById('quoteDisplay').innerText = `${randomQuote.text} - ${randomQuote.category}`;
+}
+
 // Load the initial random quote and categories when the page is loaded
 window.onload = function() {
     populateCategories(); // Populate categories on load
     filterQuotes(); // Filter quotes to display based on the last selected category
     syncQuotes(); // Initial sync with server
+    showRandomQuote(); // Display a random quote on load
 };
 
 // Synchronize local quotes with the server every 10 seconds
 setInterval(syncQuotes, 10000); // Adjust interval as needed (10 seconds)
 
+// Event listener for the "Show New Quote" button
+document.getElementById('newQuote').addEventListener('click', showRandomQuote);
