@@ -190,6 +190,19 @@ function exportQuotes() {
     URL.revokeObjectURL(url); // Clean up the URL object
     notifyUser("Quotes exported successfully!"); // Notify user about the export
 }
+// Function to import quotes from a JSON file
+function importFromJsonFile(event) {
+    const fileReader = new FileReader();
+    fileReader.onload = function(event) {
+        const importedQuotes = JSON.parse(event.target.result); // Parse the JSON
+        quotes.push(...importedQuotes); // Add the imported quotes to the existing array
+        saveQuotes(); // Save the updated quotes to local storage
+        populateCategories(); // Update categories
+        displayRandomQuote(); // Display a random quote
+        notifyUser('Quotes imported successfully!'); // Notify user about the import
+    };
+    fileReader.readAsText(event.target.files[0]); // Read the file
+}
 
 
 // Load the initial random quote and categories when the page is loaded
