@@ -60,6 +60,9 @@ async function fetchQuotesFromServer() {
 
         saveQuotes(); // Save updated quotes to local storage
 
+        // Notify user about the sync
+        notifyUser("Quotes synced with server!");
+
         if (isConflict) {
             notifyUser("Conflicts detected: Some quotes already exist.");
         } else {
@@ -76,7 +79,6 @@ async function fetchQuotesFromServer() {
 // Function to synchronize quotes with the server
 async function syncQuotes() {
     await fetchQuotesFromServer(); // Fetch new quotes from the server
-    // Add additional logic if needed for conflict resolution here
 }
 
 // Notification function to inform users about updates
@@ -175,3 +177,4 @@ window.onload = function() {
     filterQuotes(); // Filter quotes to display based on the last selected category
     syncQuotes(); // Initial sync with server
 };
+
