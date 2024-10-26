@@ -14,6 +14,29 @@ function saveQuotes() {
     localStorage.setItem('quotes', JSON.stringify(quotes));
 }
 
+// Function to post a new quote to the server
+async function postQuoteToServer(quote) {
+    try {
+        const response = await fetch(SERVER_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(quote)
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            console.log('Quote posted successfully:', data);
+            notifyUser("New quote added to the server.");
+        } else {
+            console.error('Failed to post quote:', response.statusText);
+        }
+    } catch (error) {
+        console.error('Error posting quote:', error);
+    }
+}
+
 // Function to fetch quotes from the simulated server
 async function fetchQuotesFromServer() {
     try {
@@ -60,6 +83,26 @@ setInterval(() => {
     fetchQuotesFromServer();
 }, 10000); // Adjust interval as needed (10 seconds)
 
+// Function to add a new quote
+function addQuote() {
+    const newQuoteText = document.getElementById('newQuoteText').value;
+    const newQuoteCategory = document.getElementById('newQuoteCategory').value;
+
+    if (newQuoteText && newQuoteCategory) {
+        const newQuote = { text: newQuoteText, category: newQuoteCategory };
+        
+        quotes.push(newQuote);
+        saveQuotes();
+        notifyUser("New quote added locally.");
+        postQuoteToServer(newQuote); // Post to server
+        populateCategories(); // Update categories in dropdown
+        filterQuotes(); // Refresh displayed quotes
+    } else {
+        alert("Please fill in both fields.");
+    }
+}
+
+// Function to populate categories
 function populateCategories() {
     const categoryFilter = document.getElementById('categoryFilter');
     const uniqueCategories = new Set(quotes.map(quote => quote.category));
@@ -79,8 +122,25 @@ function populateCategories() {
     categoryFilter.value = lastSelectedCategory;
 }
 
-// The rest of your existing functions remain unchanged (showRandomQuote, addQuote, etc.)
-// Include the remaining code as necessary...
+// Function to filter quotes based on the selected category
+function filterQuotes() {
+    const categoryFilter = document.getElementById('categoryFilter');
+    const selectedCategory = categoryFilter.value;
+    
+    const filteredQuotes = selectedCategory === 'all' ? quotes : quotes.filter(q => q.category === selectedCategory);
+    
+    const quoteDisplay = document.getElementById('quoteDisplay');
+    quoteDisplay.innerHTML = '';
+    
+    filteredQuotes.forEach(quote => {
+        const quoteElement = document.createElement('div');
+        quoteElement.textContent = `${quote.text} - ${quote.category}`;
+        quoteDisplay.appendChild(quoteElement);
+    });
+
+    // Save the last selected category in local storage
+    localStorage.setItem('lastSelectedCategory', selectedCategory);
+}
 
 // Load the initial random quote and categories when the page is loaded
 window.onload = function() {
