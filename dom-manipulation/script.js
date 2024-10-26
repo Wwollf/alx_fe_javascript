@@ -45,12 +45,12 @@ async function fetchQuotesFromServer() {
 
         // Example: Merge server quotes with local quotes
         const newQuotes = serverQuotes.map(quote => ({ text: quote.title, category: "Imported" }));
-        
+
         // Merge logic with conflict resolution
         newQuotes.forEach(serverQuote => {
             const existingQuote = quotes.find(q => q.text === serverQuote.text);
             if (!existingQuote) {
-                quotes.push(serverQuote); // Add new quotes
+                quotes.push(serverQuote); // Add new quotes if they don't exist
             }
         });
 
@@ -61,6 +61,12 @@ async function fetchQuotesFromServer() {
     } catch (error) {
         console.error("Error fetching quotes from server:", error);
     }
+}
+
+// Function to synchronize quotes with the server
+async function syncQuotes() {
+    await fetchQuotesFromServer(); // Fetch new quotes from the server
+    // Add additional logic if needed for conflict resolution here
 }
 
 // Notification function to inform users about updates
@@ -79,9 +85,7 @@ function notifyUser(message) {
 }
 
 // Function to synchronize local quotes with the server every 10 seconds
-setInterval(() => {
-    fetchQuotesFromServer();
-}, 10000); // Adjust interval as needed (10 seconds)
+setInterval(syncQuotes, 10000); // Adjust interval as needed (10 seconds)
 
 // Function to add a new quote
 function addQuote() {
@@ -146,5 +150,5 @@ function filterQuotes() {
 window.onload = function() {
     populateCategories(); // Populate categories on load
     filterQuotes(); // Filter quotes to display based on the last selected category
-    fetchQuotesFromServer(); // Initial fetch from server
+    syncQuotes(); // Initial sync with server
 };
