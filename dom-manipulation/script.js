@@ -178,6 +178,19 @@ function showRandomQuote() {
     const randomQuote = quotes[randomIndex];
     document.getElementById('quoteDisplay').innerText = `${randomQuote.text} - ${randomQuote.category}`;
 }
+// Function to export quotes as a JSON file
+function exportQuotes() {
+    const quotesData = JSON.stringify(quotes, null, 2); // Convert quotes to JSON format
+    const blob = new Blob([quotesData], { type: 'application/json' }); // Create a Blob
+    const url = URL.createObjectURL(blob); // Create a URL for the Blob
+    const a = document.createElement('a'); // Create an anchor element
+    a.href = url;
+    a.download = 'quotes.json'; // Set the file name
+    a.click(); // Trigger the download
+    URL.revokeObjectURL(url); // Clean up the URL object
+    notifyUser("Quotes exported successfully!"); // Notify user about the export
+}
+
 
 // Load the initial random quote and categories when the page is loaded
 window.onload = function() {
