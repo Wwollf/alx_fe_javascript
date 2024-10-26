@@ -22,7 +22,7 @@ console.log(quotes);
 document.getElementById('newQuote').addEventListener('click', showRandomQuote);
 
 // Function to add a new quote based on user input
-function addQuote() {
+function createAddQuoteForm() {
     // Get user input values
     const newText = document.getElementById('newQuoteText').value.trim();
     const newCategory = document.getElementById('newQuoteCategory').value.trim();
