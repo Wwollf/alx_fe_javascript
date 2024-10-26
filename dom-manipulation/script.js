@@ -28,7 +28,7 @@ async function postQuoteToServer(quote) {
         if (response.ok) {
             const data = await response.json();
             console.log('Quote posted successfully:', data);
-            notifyUser("New quote added to the server.");
+            notifyUser("Quote added to the server successfully.");
         } else {
             console.error('Failed to post quote:', response.statusText);
         }
@@ -46,16 +46,26 @@ async function fetchQuotesFromServer() {
         // Example: Merge server quotes with local quotes
         const newQuotes = serverQuotes.map(quote => ({ text: quote.title, category: "Imported" }));
 
+        let isConflict = false; // Flag to check if there are conflicts
+
         // Merge logic with conflict resolution
         newQuotes.forEach(serverQuote => {
             const existingQuote = quotes.find(q => q.text === serverQuote.text);
             if (!existingQuote) {
                 quotes.push(serverQuote); // Add new quotes if they don't exist
+            } else {
+                isConflict = true; // Conflict detected if the quote already exists
             }
         });
 
         saveQuotes(); // Save updated quotes to local storage
-        notifyUser("Quotes updated from server.");
+
+        if (isConflict) {
+            notifyUser("Conflicts detected: Some quotes already exist.");
+        } else {
+            notifyUser("Quotes updated from server successfully.");
+        }
+
         populateCategories(); // Update categories in dropdown
         filterQuotes(); // Refresh displayed quotes
     } catch (error) {
@@ -76,12 +86,25 @@ function notifyUser(message) {
     notification.style.backgroundColor = 'lightyellow';
     notification.style.padding = '10px';
     notification.style.margin = '10px 0';
+    notification.style.border = '1px solid #ccc';
+    notification.style.borderRadius = '5px';
+    notification.style.position = 'relative';
+
+    // Add a close button to the notification
+    const closeButton = document.createElement('button');
+    closeButton.textContent = 'X';
+    closeButton.style.position = 'absolute';
+    closeButton.style.top = '5px';
+    closeButton.style.right = '5px';
+    closeButton.onclick = () => notification.remove();
+    
+    notification.appendChild(closeButton);
     document.body.prepend(notification);
 
-    // Auto-hide notification after 3 seconds
+    // Auto-hide notification after 5 seconds
     setTimeout(() => {
         notification.remove();
-    }, 3000);
+    }, 5000);
 }
 
 // Function to synchronize local quotes with the server every 10 seconds
