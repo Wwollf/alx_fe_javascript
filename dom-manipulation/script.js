@@ -6,22 +6,33 @@ const quotes = [
     { text: "In the middle of difficulty lies opportunity.", category: "Inspiration" }
 ];
 
-// Function to display a random quote in the 'quoteDisplay' div
+// Function to display a random quote in the 'quoteDisplay' div using createElement and appendChild
 function showRandomQuote() {
+    // Clear the existing content in 'quoteDisplay'
+    const quoteDisplay = document.getElementById('quoteDisplay');
+    quoteDisplay.innerHTML = '';
+
+    // Select a random quote
     const randomIndex = Math.floor(Math.random() * quotes.length);
     const randomQuote = quotes[randomIndex];
-    document.getElementById('quoteDisplay').innerHTML = `
-        <p>"${randomQuote.text}"</p>
-        <p><em>Category: ${randomQuote.category}</em></p>
-    `;
-}
-console.log(quotes);
 
+    // Create elements for the quote text and category
+    const quoteText = document.createElement('p');
+    quoteText.textContent = `"${randomQuote.text}"`;
+
+    const quoteCategory = document.createElement('p');
+    quoteCategory.textContent = `Category: ${randomQuote.category}`;
+    quoteCategory.style.fontStyle = 'italic';
+
+    // Append the elements to the 'quoteDisplay' div
+    quoteDisplay.appendChild(quoteText);
+    quoteDisplay.appendChild(quoteCategory);
+}
 
 // Ensure 'Show New Quote' button triggers the showRandomQuote function
 document.getElementById('newQuote').addEventListener('click', showRandomQuote);
 
-// Function to add a new quote based on user input
+// Function to add a new quote based on user input using createElement and appendChild
 function createAddQuoteForm() {
     // Get user input values
     const newText = document.getElementById('newQuoteText').value.trim();
@@ -31,9 +42,14 @@ function createAddQuoteForm() {
     if (newText && newCategory) {
         // Add new quote object to the quotes array
         quotes.push({ text: newText, category: newCategory });
-        
-        // Provide feedback to the user
-        document.getElementById('quoteDisplay').innerHTML = `<p>New quote added!</p>`;
+
+        // Provide feedback to the user by updating the DOM
+        const quoteDisplay = document.getElementById('quoteDisplay');
+        quoteDisplay.innerHTML = ''; // Clear the display
+
+        const confirmationMessage = document.createElement('p');
+        confirmationMessage.textContent = 'New quote added!';
+        quoteDisplay.appendChild(confirmationMessage);
 
         // Clear the input fields
         document.getElementById('newQuoteText').value = '';
@@ -41,6 +57,7 @@ function createAddQuoteForm() {
     } else {
         alert("Please enter both a quote and a category.");
     }
-    console.log(quotes);
+}
+
 
 }
